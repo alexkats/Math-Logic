@@ -1,5 +1,6 @@
-package com.alex.mathlogic.common;
+package com.alex.mathlogic.common.formula;
 
+import com.alex.mathlogic.common.Pair;
 import com.alex.mathlogic.common.node.Node;
 import com.alex.mathlogic.common.node.Type;
 
@@ -45,7 +46,7 @@ public class FormulaChecker {
                     Node leftPart = parsedFormulas.get(j);
 
                     if (Objects.equals(leftPart, whole.getLeft())) {
-                        return Optional.of(new Pair<>(j, i));
+                        return Optional.of(new Pair<>(j + 1, i + 1));
                     }
                 }
             }
@@ -81,12 +82,16 @@ public class FormulaChecker {
     }
 
     private static boolean fillVariablesAndCheckEquality(Map<String, List<Node>> variables, Node formula, Node pattern) {
-        if (Objects.equals(formula, pattern)) {
+        if (formula == null && pattern == null) {
             return true;
         }
 
         if (formula == null || pattern == null) {
             return false;
+        }
+
+        if (formula == pattern) {
+            return true;
         }
 
         String stringNotation = pattern.getStringNotation();

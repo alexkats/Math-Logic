@@ -11,7 +11,7 @@ import java.util.List;
 public class HashCodeHelper {
 
     private static final List<Long> primes = new ArrayList<>();
-    private static final int QUANTITY = 5_000 * 5_000;
+    private static final int QUANTITY = 5_000;
     private static final long CONST_31 = 31L;
 
     static {

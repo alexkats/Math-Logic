@@ -1,4 +1,4 @@
-package com.alex.mathlogic.common;
+package com.alex.mathlogic.common.formula;
 
 import com.alex.mathlogic.common.node.Node;
 import com.alex.mathlogic.common.node.Type;
@@ -54,7 +54,7 @@ public class FormulaParser {
         char symbol = formula.charAt(currentSymbol);
 
         if (Character.isUpperCase(symbol)) {
-            result = new Node(constructVariableName(formula), null, null);
+            result = new Node(constructVariableName(formula));
         } else if (symbol == '!') {
             currentSymbol++;
             result = new Node(Type.NOT.getStringNotation(), null, parseNegation(formula));
@@ -72,18 +72,20 @@ public class FormulaParser {
     private static String constructVariableName(String formula) {
         StringBuilder variableName = new StringBuilder();
         variableName.append(formula.charAt(currentSymbol++));
-        char symbol = formula.charAt(currentSymbol);
+        char symbol = currentSymbol < formula.length() ? formula.charAt(currentSymbol) : 0;
 
         while (Character.isDigit(symbol)) {
             variableName.append(symbol);
             currentSymbol++;
+            symbol = currentSymbol < formula.length() ? formula.charAt(currentSymbol) : 0;
         }
 
         return variableName.toString();
     }
 
     private static boolean checkNextSubstring(String string, String substring) {
-        if (currentSymbol < string.length() && Objects.equals(string.substring(currentSymbol, currentSymbol + substring.length()), substring)) {
+        if (currentSymbol + substring.length() <= string.length()
+                && Objects.equals(string.substring(currentSymbol, currentSymbol + substring.length()), substring)) {
             currentSymbol += substring.length();
             return true;
         }

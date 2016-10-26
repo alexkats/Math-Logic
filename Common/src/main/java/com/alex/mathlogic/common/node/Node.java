@@ -15,6 +15,11 @@ public class Node {
     private Node left;
     private Node right;
     private int verticesQuantity = 1;
+    private final int hash;
+
+    public Node(String stringNotation) {
+        this(stringNotation, null, null);
+    }
 
     public Node(String stringNotation, Node left, Node right) {
         this.stringNotation = stringNotation;
@@ -28,6 +33,8 @@ public class Node {
         if (right != null) {
             verticesQuantity += right.verticesQuantity;
         }
+
+        hash = calculateHash();
     }
 
     public String getStringNotation() {
@@ -67,8 +74,7 @@ public class Node {
                 && Objects.equals(right, other.right);
     }
 
-    @Override
-    public int hashCode() {
+    private int calculateHash() {
         int hash = 0;
         hash += left == null ? 0 : left.hashCode();
         hash *= 31;
@@ -79,6 +85,11 @@ public class Node {
             hash += right.hashCode();
         }
 
+        return hash;
+    }
+
+    @Override
+    public int hashCode() {
         return hash;
     }
 }

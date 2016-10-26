@@ -1,10 +1,11 @@
 package com.alex.mathlogic.task1;
 
 import com.alex.mathlogic.common.Axioms;
-import com.alex.mathlogic.common.FormulaChecker;
-import com.alex.mathlogic.common.FormulaParser;
 import com.alex.mathlogic.common.Pair;
+import com.alex.mathlogic.common.Solver;
 import com.alex.mathlogic.common.Utils;
+import com.alex.mathlogic.common.formula.FormulaChecker;
+import com.alex.mathlogic.common.formula.FormulaParser;
 import com.alex.mathlogic.common.node.Node;
 
 import java.io.BufferedReader;
@@ -23,18 +24,18 @@ import java.util.Optional;
  * @since 26.10.16
  */
 
-class Solver {
+class TaskOneSolver implements Solver {
 
     private int formulaNumber;
     private static final List<Node> axioms = new ArrayList<>();
 
     static {
-        Axioms.getAxioms().forEach(e -> axioms.add(FormulaParser.parse(e)));
+        Axioms.getAxioms().forEach(e -> axioms.add(FormulaParser.parse(Utils.normalize(e))));
     }
 
     private final List<Node> parsedFormulas = new ArrayList<>();
 
-    void solve(String inputFilename, String outputFilename) {
+    public void solve(String inputFilename, String outputFilename) {
         parsedFormulas.clear();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(inputFilename)));
@@ -52,7 +53,7 @@ class Solver {
 
                 formulaNumber++;
 
-                if (!resolve(formula, printWriter)) {
+                if (resolve(formula, printWriter)) {
                     break;
                 }
             }
