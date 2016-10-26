@@ -9,8 +9,7 @@ public enum Type {
     AND("&"),
     OR("|"),
     NOT("!"),
-    IMPLICATION("->"),
-    VARIABLE("");
+    IMPLICATION("->");
 
     private String stringNotation;
 
