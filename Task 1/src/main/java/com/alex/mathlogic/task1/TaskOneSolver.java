@@ -39,7 +39,8 @@ class TaskOneSolver implements Solver {
         parsedFormulas.clear();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(inputFilename)));
-             PrintWriter printWriter = new PrintWriter(new FileWriter(new File(outputFilename)))) {
+             PrintWriter printWriter = new PrintWriter(new FileWriter(new File(outputFilename))))
+        {
 
             formulaNumber = 0;
 
@@ -70,8 +71,10 @@ class TaskOneSolver implements Solver {
         boolean end = false;
 
         if (axiomNumber == 0) {
-            Optional<Pair<Integer, Integer>> modusPonensNumbers = FormulaChecker.checkModusPonens(parsedFormula, parsedFormulas);
-            modusPonensNumbers.ifPresent(e -> printWriter.printf(Locale.US, "(M.P. %d, %d)\n", e.getFirst(), e.getSecond()));
+            Optional<Pair<Integer, Integer>> modusPonensNumbers =
+                FormulaChecker.checkModusPonens(parsedFormula, parsedFormulas);
+            modusPonensNumbers
+                .ifPresent(e -> printWriter.printf(Locale.US, "(M.P. %d, %d)\n", e.getFirst(), e.getSecond()));
 
             if (!modusPonensNumbers.isPresent()) {
                 printWriter.printf(Locale.US, "(Не доказано)\n");

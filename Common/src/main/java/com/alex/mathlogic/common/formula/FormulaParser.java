@@ -1,8 +1,11 @@
 package com.alex.mathlogic.common.formula;
 
+import com.alex.mathlogic.common.Pair;
 import com.alex.mathlogic.common.node.Node;
 import com.alex.mathlogic.common.node.Type;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -12,11 +15,30 @@ import java.util.Objects;
 
 public class FormulaParser {
 
+    private FormulaParser() {
+
+    }
+
     private static int currentSymbol;
 
     public static Node parse(String formula) {
         currentSymbol = 0;
         return parseExpression(formula);
+    }
+
+    public static Pair<Node, Node> parseSupposes(String title, List<Node> supposes) {
+        List<String> formulas = Arrays.asList(title.split(","));
+        int n = formulas.size();
+        String last = formulas.get(n - 1);
+        int ind = last.indexOf('|');
+        String alphaString = last.substring(0, ind);
+        String betaString = last.substring(ind + 2);
+
+        for (int i = 0; i < formulas.size() - 1; i++) {
+            supposes.add(parse(formulas.get(i)));
+        }
+
+        return Pair.of(parse(alphaString), parse(betaString));
     }
 
     private static Node parseExpression(String formula) {
@@ -85,7 +107,8 @@ public class FormulaParser {
 
     private static boolean checkNextSubstring(String string, String substring) {
         if (currentSymbol + substring.length() <= string.length()
-                && Objects.equals(string.substring(currentSymbol, currentSymbol + substring.length()), substring)) {
+            && Objects.equals(string.substring(currentSymbol, currentSymbol + substring.length()), substring))
+        {
             currentSymbol += substring.length();
             return true;
         }

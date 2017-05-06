@@ -1,6 +1,7 @@
 package com.alex.mathlogic.common.formula;
 
 import com.alex.mathlogic.common.Pair;
+import com.alex.mathlogic.common.Utils;
 import com.alex.mathlogic.common.node.Node;
 import com.alex.mathlogic.common.node.Type;
 
@@ -18,6 +19,10 @@ import java.util.Optional;
 
 public class FormulaChecker {
 
+    private FormulaChecker() {
+
+    }
+
     public static int checkAxioms(Node formula, List<Node> axioms) {
         int result = 0;
 
@@ -31,6 +36,13 @@ public class FormulaChecker {
         return result;
     }
 
+    public static boolean checkSuppose(Node formula, List<Node> supposes) {
+        return supposes
+            .stream()
+            .filter(e -> Objects.equals(formula, e))
+            .count() == 1;
+    }
+
     public static Optional<Pair<Integer, Integer>> checkModusPonens(Node formula, List<Node> parsedFormulas) {
         for (int i = parsedFormulas.size() - 2; i > -1; i--) {
             Node whole = parsedFormulas.get(i);
@@ -41,12 +53,14 @@ public class FormulaChecker {
 
             Node rightPart = whole.getRight();
 
-            if (Objects.equals(whole.getStringNotation(), Type.IMPLICATION.getStringNotation()) && Objects.equals(rightPart, formula)) {
+            if (Objects.equals(whole.getStringNotation(), Type.IMPLICATION.getStringNotation()) &&
+                Objects.equals(rightPart, formula))
+            {
                 for (int j = 0; j < parsedFormulas.size() - 1; j++) {
                     Node leftPart = parsedFormulas.get(j);
 
                     if (Objects.equals(leftPart, whole.getLeft())) {
-                        return Optional.of(new Pair<>(j + 1, i + 1));
+                        return Optional.of(Pair.of(j + 1, i + 1));
                     }
                 }
             }
@@ -81,7 +95,9 @@ public class FormulaChecker {
         return result;
     }
 
-    private static boolean fillVariablesAndCheckEquality(Map<String, List<Node>> variables, Node formula, Node pattern) {
+    private static boolean fillVariablesAndCheckEquality(Map<String, List<Node>> variables, Node formula,
+        Node pattern)
+    {
         if (formula == null && pattern == null) {
             return true;
         }
@@ -96,7 +112,7 @@ public class FormulaChecker {
 
         String stringNotation = pattern.getStringNotation();
 
-        if (isVariable(stringNotation)) {
+        if (Utils.isVariable(stringNotation)) {
             if (variables.containsKey(stringNotation)) {
                 variables.get(stringNotation).add(formula);
             } else {
@@ -109,11 +125,7 @@ public class FormulaChecker {
         }
 
         return Objects.equals(stringNotation, formula.getStringNotation())
-                && fillVariablesAndCheckEquality(variables, formula.getLeft(), pattern.getLeft())
-                && fillVariablesAndCheckEquality(variables, formula.getRight(), pattern.getRight());
-    }
-
-    private static boolean isVariable(String s) {
-        return s != null && !s.isEmpty() && Character.isUpperCase(s.charAt(0));
+            && fillVariablesAndCheckEquality(variables, formula.getLeft(), pattern.getLeft())
+            && fillVariablesAndCheckEquality(variables, formula.getRight(), pattern.getRight());
     }
 }

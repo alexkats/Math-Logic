@@ -19,6 +19,10 @@ public class Tester {
     private static final String END_INPUT_TEST_FILE = ".in";
     private static final String END_OUTPUT_TEST_FILE = ".out";
 
+    private Tester() {
+
+    }
+
     public static void testAll(String stringPath, Solver solver) {
         final FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
             @Override

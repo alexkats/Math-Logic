@@ -1,5 +1,6 @@
 package com.alex.mathlogic.common.node;
 
+import com.alex.mathlogic.common.Utils;
 import com.alex.mathlogic.common.math.HashCodeHelper;
 
 import java.util.Objects;
@@ -49,6 +50,26 @@ public class Node {
         return right;
     }
 
+    public String getRecursiveStringNotation() {
+        StringBuilder result = new StringBuilder();
+
+        if (left != null) {
+            result.append(left.getEmbeddedStringNotation());
+        }
+
+        result.append(stringNotation);
+
+        if (right != null) {
+            result.append(right.getEmbeddedStringNotation());
+        }
+
+        return result.toString();
+    }
+
+    private String getEmbeddedStringNotation() {
+        return Utils.isVariable(stringNotation) ? stringNotation : "(" + getRecursiveStringNotation() + ')';
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -70,8 +91,8 @@ public class Node {
         Node other = (Node) obj;
 
         return Objects.equals(stringNotation, other.stringNotation)
-                && Objects.equals(left, other.left)
-                && Objects.equals(right, other.right);
+            && Objects.equals(left, other.left)
+            && Objects.equals(right, other.right);
     }
 
     private int calculateHash() {
