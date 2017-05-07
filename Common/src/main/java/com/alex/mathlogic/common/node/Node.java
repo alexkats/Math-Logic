@@ -3,6 +3,7 @@ package com.alex.mathlogic.common.node;
 import com.alex.mathlogic.common.Utils;
 import com.alex.mathlogic.common.math.HashCodeHelper;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Objects;
 public class Node {
 
     private String stringNotation;
+    private boolean currentValue;
     private Node left;
     private Node right;
     private int verticesQuantity = 1;
@@ -42,6 +44,10 @@ public class Node {
         return stringNotation;
     }
 
+    public boolean getCurrentValue() {
+        return currentValue;
+    }
+
     public Node getLeft() {
         return left;
     }
@@ -68,6 +74,48 @@ public class Node {
 
     private String getEmbeddedStringNotation() {
         return Utils.isVariable(stringNotation) ? stringNotation : "(" + getRecursiveStringNotation() + ')';
+    }
+
+    public boolean evaluate(Map<String, Boolean> varValues) {
+        if (Utils.isVariable(stringNotation)) {
+            Boolean value = varValues.get(stringNotation);
+
+            if (value == null) {
+                throw new IllegalStateException("No such variable");
+            }
+
+            return currentValue = value;
+        }
+
+        boolean leftValue = left != null && left.evaluate(varValues);
+        boolean rightValue = right != null && right.evaluate(varValues);
+
+        if (Objects.equals(stringNotation, Type.IMPLICATION.getStringNotation())) {
+            return currentValue = (!leftValue | rightValue);
+        } else if (Objects.equals(stringNotation, Type.OR.getStringNotation())) {
+            return currentValue = (leftValue | rightValue);
+        } else if (Objects.equals(stringNotation, Type.AND.getStringNotation())) {
+            return currentValue = (leftValue & rightValue);
+        } else if (Objects.equals(stringNotation, Type.NOT.getStringNotation())) {
+            return currentValue = (!rightValue);
+        }
+
+        throw new IllegalStateException("Can not evaluate");
+    }
+
+    public void getVariables(Map<String, Boolean> variables) {
+        if (Utils.isVariable(stringNotation)) {
+            variables.put(stringNotation, false);
+            return;
+        }
+
+        if (left != null) {
+            left.getVariables(variables);
+        }
+
+        if (right != null) {
+            right.getVariables(variables);
+        }
     }
 
     @Override

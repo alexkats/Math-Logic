@@ -37,14 +37,30 @@ public class FormulaChecker {
     }
 
     public static boolean checkSuppose(Node formula, List<Node> supposes) {
-        return supposes
-            .stream()
-            .filter(e -> Objects.equals(formula, e))
-            .count() == 1;
+        return checkSuppose(formula, supposes, 0, supposes.size());
+    }
+
+    public static boolean checkSuppose(Node formula, List<Node> supposes, int from, int to) {
+        boolean found = false;
+
+        for (int i = from; i < to; i++) {
+            if (Objects.equals(formula, supposes.get(i))) {
+                found = true;
+                break;
+            }
+        }
+
+        return found;
     }
 
     public static Optional<Pair<Integer, Integer>> checkModusPonens(Node formula, List<Node> parsedFormulas) {
-        for (int i = parsedFormulas.size() - 2; i > -1; i--) {
+        return checkModusPonens(formula, parsedFormulas, parsedFormulas.size() - 2, -1);
+    }
+
+    public static Optional<Pair<Integer, Integer>> checkModusPonens(Node formula, List<Node> parsedFormulas, int from,
+        int to)
+    {
+        for (int i = from; i > to; i--) {
             Node whole = parsedFormulas.get(i);
 
             if (whole == null) {
@@ -56,7 +72,7 @@ public class FormulaChecker {
             if (Objects.equals(whole.getStringNotation(), Type.IMPLICATION.getStringNotation()) &&
                 Objects.equals(rightPart, formula))
             {
-                for (int j = 0; j < parsedFormulas.size() - 1; j++) {
+                for (int j = 0; j < from + 1; j++) {
                     Node leftPart = parsedFormulas.get(j);
 
                     if (Objects.equals(leftPart, whole.getLeft())) {

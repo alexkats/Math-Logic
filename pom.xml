@@ -11,7 +11,8 @@
 		<module>Common</module>
 		<module>Task 1</module>
 		<module>Task 2</module>
-	</modules>
+        <module>Task 3</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<build>
