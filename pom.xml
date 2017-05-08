@@ -12,6 +12,7 @@
 		<module>Task 1</module>
 		<module>Task 2</module>
         <module>Task 3</module>
+        <module>Task 8</module>
     </modules>
 	<packaging>pom</packaging>
 
