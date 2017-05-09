@@ -17,5 +17,3 @@ if "%1" == "4" (
 if "%1" == "8" (
     mvn exec:java -pl "Task 8" -Dexec.mainClass=com.alex.mathlogic.task8.TaskEightTester
 )
-
-echo "Wrong argument"
