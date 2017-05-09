@@ -44,7 +44,7 @@ public class TaskThreeSolver implements Solver {
         proof.clear();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(inputFilename)));
-             PrintWriter printWriter = new PrintWriter(new FileWriter(new File(outputFilename))))
+             PrintWriter printWriter = new PrintWriter(new File(outputFilename), "UTF-8"))
         {
 
             String formula = bufferedReader.readLine();
